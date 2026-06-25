@@ -5,6 +5,7 @@ import { ENTITIES } from './database/entities';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { NovedadesModule } from './modules/novedades/novedades.module';
+import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { NovedadesModule } from './modules/novedades/novedades.module';
     UsersModule,
     AuthModule,
     NovedadesModule,
+    AuditoriaModule,
   ],
 })
 export class AppModule {}

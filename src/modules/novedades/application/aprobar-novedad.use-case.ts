@@ -3,13 +3,18 @@ import { NovedadesRepository } from '../infrastructure/novedades.repository';
 import { Novedad } from '../domain/novedad.entity';
 import { EstadoNovedad } from '../domain/novedad-estado.enum';
 import { validarTransicion } from '../domain/workflow.policy';
-import { ContextoUsuario } from '../domain/visibilidad.policy';
+import type { JwtPayload } from '../../auth/domain/jwt-payload.interface';
+import { AuditoriaService } from '../../auditoria/application/auditoria.service';
+import { AuditoriaAccion } from '../../auditoria/domain/auditoria-accion.enum';
 
 @Injectable()
 export class AprobarNovedadUseCase {
-  constructor(private readonly repository: NovedadesRepository) {}
+  constructor(
+    private readonly repository: NovedadesRepository,
+    private readonly auditoria: AuditoriaService,
+  ) {}
 
-  async execute(user: ContextoUsuario, id: number): Promise<Novedad> {
+  async execute(user: JwtPayload, id: number): Promise<Novedad> {
     const novedad = await this.repository.findById(id);
 
     // El supervisor solo opera sobre novedades de SU filial.
@@ -20,6 +25,15 @@ export class AprobarNovedadUseCase {
     validarTransicion(novedad.estado, EstadoNovedad.APROBADA);
     novedad.estado = EstadoNovedad.APROBADA;
     novedad.aprobadorId = user.sub;
-    return this.repository.guardar(novedad);
+    const guardada = await this.repository.guardar(novedad);
+
+    await this.auditoria.registrar({
+      actor: user,
+      accion: AuditoriaAccion.APROBAR,
+      entidad: 'novedad',
+      entidadId: id,
+    });
+
+    return guardada;
   }
 }
