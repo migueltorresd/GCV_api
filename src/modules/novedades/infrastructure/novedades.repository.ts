@@ -46,6 +46,29 @@ export class NovedadesRepository {
     return this.repo.save(novedad);
   }
 
+  // Novedades APROBADAS de la filial en un rango (para exportación Anexo E).
+  // Carga relaciones para resolver email del solicitante/aprobador y código de filial.
+  findAprobadas(filialId: number, desde?: string, hasta?: string): Promise<Novedad[]> {
+    const where: FindOptionsWhere<Novedad> = {
+      filialId,
+      estado: EstadoNovedad.APROBADA,
+    };
+
+    if (desde && hasta) {
+      where.fechaInicio = Between(desde, hasta);
+    } else if (desde) {
+      where.fechaInicio = MoreThanOrEqual(desde);
+    } else if (hasta) {
+      where.fechaInicio = LessThanOrEqual(hasta);
+    }
+
+    return this.repo.find({
+      where,
+      relations: { solicitante: true, aprobador: true, filial: true },
+      order: { fechaInicio: 'ASC' },
+    });
+  }
+
   /**
    * Listado con scope de seguridad SIEMPRE aplicado.
    * `scope` viene de scopeVisibilidadNovedades → garantiza filial (y propietario si es Colaborador).

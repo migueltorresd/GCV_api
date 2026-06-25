@@ -25,6 +25,7 @@ export class AprobarNovedadUseCase {
     validarTransicion(novedad.estado, EstadoNovedad.APROBADA);
     novedad.estado = EstadoNovedad.APROBADA;
     novedad.aprobadorId = user.sub;
+    novedad.fechaAprobacion = new Date();
     const guardada = await this.repository.guardar(novedad);
 
     await this.auditoria.registrar({

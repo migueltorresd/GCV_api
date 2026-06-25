@@ -58,6 +58,10 @@ export class Novedad {
   @Column({ name: 'motivo_rechazo', type: 'text', nullable: true })
   motivoRechazo!: string | null;
 
+  // Fecha de aprobación — requerida por el Anexo E (CSV). Se setea al aprobar.
+  @Column({ name: 'fecha_aprobacion', type: 'timestamptz', nullable: true })
+  fechaAprobacion!: Date | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 

@@ -23,5 +23,6 @@ import { NovedadesController } from './presentation/novedades.controller';
     RechazarNovedadUseCase,
     AprobarMasivoUseCase,
   ],
+  exports: [NovedadesRepository], // lo consume el módulo de exportación
 })
 export class NovedadesModule {}

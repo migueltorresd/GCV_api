@@ -31,6 +31,7 @@ export class AprobarMasivoUseCase {
       if (puedeTransicionar(novedad.estado, EstadoNovedad.APROBADA)) {
         novedad.estado = EstadoNovedad.APROBADA;
         novedad.aprobadorId = user.sub;
+        novedad.fechaAprobacion = new Date();
         await this.repository.guardar(novedad);
         procesados.push(novedad.id);
       }
