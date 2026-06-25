@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITIES } from './database/entities';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { ENTITIES } from './database/entities';
         synchronize: config.get<string>('DB_SYNCHRONIZE') !== 'false',
       }),
     }),
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
