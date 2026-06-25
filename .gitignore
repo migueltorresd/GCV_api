@@ -1,6 +1,9 @@
 # Dependencias
 /node_modules
 
+# Gestor de paquetes: pnpm (no versionar lockfile de npm)
+package-lock.json
+
 # Build / salida
 /dist
 /build
