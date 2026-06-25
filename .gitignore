@@ -1,0 +1,27 @@
+# Dependencias
+/node_modules
+
+# Build / salida
+/dist
+/build
+*.tsbuildinfo
+
+# Variables de entorno (el .env.example SÍ se versiona)
+.env
+.env.local
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Cobertura de tests
+/coverage
+/.nyc_output
+
+# Sistema operativo / IDE
+.DS_Store
+Thumbs.db
+/.idea
+*.swp
