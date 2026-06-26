@@ -33,6 +33,11 @@ export class Novedad {
   @Column({ type: 'text', nullable: true })
   descripcion!: string | null;
 
+  // Adjunto opcional (RT-04): se guarda solo la referencia (nombre/URL).
+  // El almacenamiento real de archivos es SHOULD/COULD, fuera de alcance.
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  adjunto!: string | null;
+
   @Column({ name: 'solicitante_id' })
   solicitanteId!: number;
 

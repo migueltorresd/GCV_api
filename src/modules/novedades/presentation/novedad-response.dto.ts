@@ -10,6 +10,7 @@ export class NovedadResponseDto {
   fecha_inicio!: string;
   fecha_fin!: string | null;
   descripcion!: string | null;
+  adjunto!: string | null;
   solicitante_id!: number;
   filial_id!: number;
   aprobador_id!: number | null;
@@ -24,6 +25,7 @@ export class NovedadResponseDto {
       fecha_inicio: n.fechaInicio,
       fecha_fin: n.fechaFin,
       descripcion: n.descripcion,
+      adjunto: n.adjunto,
       solicitante_id: n.solicitanteId,
       filial_id: n.filialId,
       aprobador_id: n.aprobadorId,

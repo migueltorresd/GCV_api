@@ -17,4 +17,10 @@ export class CrearNovedadDto {
   @IsString()
   @MaxLength(1000)
   descripcion?: string;
+
+  // Referencia del adjunto opcional (nombre o URL). Sin storage real.
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  adjunto?: string;
 }

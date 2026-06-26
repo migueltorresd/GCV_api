@@ -26,6 +26,7 @@ export class CrearNovedadUseCase {
       fechaInicio: dto.fecha_inicio,
       fechaFin: dto.fecha_fin ?? null,
       descripcion: dto.descripcion ?? null,
+      adjunto: dto.adjunto ?? null,
       solicitanteId: user.sub,
       filialId: user.filial_id,
       estado: EstadoNovedad.BORRADOR,
