@@ -1,0 +1,41 @@
+# Blueprint de Render — define la base PostgreSQL y el web service NestJS.
+# La app ya lee PORT, DATABASE_URL y CORS_ORIGIN desde el entorno, así que
+# no requiere cambios de código para desplegar.
+#
+# DATABASE_URL se inyecta con la cadena INTERNA de la base (misma región que el
+# servicio), por lo que la conexión no necesita SSL.
+
+databases:
+  - name: gcv-db
+    databaseName: reto_gcv
+    user: reto
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: gcv-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start:prod
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gcv-db
+          property: connectionString
+      # No hay migrations: synchronize crea el esquema desde las entidades en el
+      # primer arranque. Para el reto es un trade-off aceptable y documentado.
+      - key: DB_SYNCHRONIZE
+        value: "true"
+      # Generado por Render; sin él la app no arranca (firma de JWT).
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1h
+      # Se completa a mano en el dashboard con la URL final de Vercel.
+      - key: CORS_ORIGIN
+        sync: false
