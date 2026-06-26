@@ -13,5 +13,5 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   entities: ENTITIES,
-  synchronize: process.env.DB_SYNCHRONIZE !== 'false',
+  synchronize: process.env.DB_SYNCHRONIZE === 'true',
 });

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ENTITIES } from './database/entities';
 import { AuthModule } from './modules/auth/auth.module';
@@ -17,15 +19,18 @@ import { ExportacionModule } from './modules/exportacion/exportacion.module';
         type: 'postgres',
         url: config.get<string>('DATABASE_URL'),
         entities: ENTITIES,
-        // Ver nota en data-source.ts: synchronize en dev, migrations en prod.
-        synchronize: config.get<string>('DB_SYNCHRONIZE') !== 'false',
+        // [A05] Seguro por defecto: synchronize SOLO si DB_SYNCHRONIZE === 'true' (dev).
+        synchronize: config.get<string>('DB_SYNCHRONIZE') === 'true',
       }),
     }),
+    // [A07] Rate limiting global (100/min); el login lo restringe más con @Throttle.
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     UsersModule,
     AuthModule,
     NovedadesModule,
     AuditoriaModule,
     ExportacionModule,
   ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

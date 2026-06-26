@@ -1,15 +1,22 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // CORS: el frontend (Vite) corre en otro origen (p. ej. http://localhost:5173).
-  // En dev se refleja el origin de la request; en prod se restringe vía CORS_ORIGIN.
-  app.enableCors({ origin: process.env.CORS_ORIGIN ?? true });
+  // [A05] Headers de seguridad.
+  app.use(helmet());
 
-  // Validación server-side global (RT-10): descarta propiedades no declaradas en los DTOs.
+  // [A05] CORS restringido: allowlist por env (coma-separada). Default al front de dev,
+  // NUNCA un comodín que refleje cualquier origin.
+  const origins = (process.env.CORS_ORIGIN ?? 'http://localhost:5173')
+    .split(',')
+    .map((o) => o.trim());
+  app.enableCors({ origin: origins });
+
+  // [A03] Validación server-side global; descarta propiedades no declaradas.
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
