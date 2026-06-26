@@ -14,4 +14,6 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: ENTITIES,
   synchronize: process.env.DB_SYNCHRONIZE === 'true',
+  // SSL requerido por Neon/Render; off en local. El seed también conecta por acá.
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });

@@ -21,6 +21,9 @@ import { ExportacionModule } from './modules/exportacion/exportacion.module';
         entities: ENTITIES,
         // [A05] Seguro por defecto: synchronize SOLO si DB_SYNCHRONIZE === 'true' (dev).
         synchronize: config.get<string>('DB_SYNCHRONIZE') === 'true',
+        // SSL requerido por proveedores gestionados (Neon, Render). Off en local (docker
+        // sin SSL). TypeORM no activa SSL desde el sslmode de la URL: hay que declararlo.
+        ssl: config.get<string>('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
       }),
     }),
     // [A07] Rate limiting global (100/min); el login lo restringe más con @Throttle.
